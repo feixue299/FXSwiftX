@@ -7,7 +7,7 @@
 #
 
 Pod::Spec.new do |s|
-  s.name             = 'FXKit'
+  s.name             = 'FXSwiftX'
   s.version          = '0.0.1'
   s.summary          = 'tool'
   s.homepage         = 'https://github.com/feixue299/FXKit'
@@ -15,5 +15,6 @@ Pod::Spec.new do |s|
   s.author           = { 'feixue299' => '1569485690@qq.com' }
   s.source           = { :git => 'https://github.com/feixue299/FXKit.git', :tag => s.version.to_s }
   s.ios.deployment_target = '11.0'
+  s.swift_version = '5.0'
   s.source_files = 'FXKit/Classes/**/*'
 end

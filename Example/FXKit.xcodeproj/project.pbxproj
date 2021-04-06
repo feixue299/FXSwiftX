@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0C3439ACC572B8A21341E949 /* Pods_FXKit_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1443AE31A381A85D8F62458D /* Pods_FXKit_Tests.framework */; };
 		45606819FB36B5CF16335A12 /* Pods_FXKit_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEA29A462B57EB13BB11649B /* Pods_FXKit_Example.framework */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
@@ -29,7 +28,6 @@
 
 /* Begin PBXFileReference section */
 		0BC5CA06CF4DADE1CB4BD411 /* Pods-FXKit_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FXKit_Example.release.xcconfig"; path = "Target Support Files/Pods-FXKit_Example/Pods-FXKit_Example.release.xcconfig"; sourceTree = "<group>"; };
-		1443AE31A381A85D8F62458D /* Pods_FXKit_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FXKit_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B4ECD720EE647AC022DB7F4 /* FXKit.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = FXKit.podspec; path = ../FXKit.podspec; sourceTree = "<group>"; };
 		27D44F64263F3E95F044B6CF /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		4BCCDEF671483F74FE4A9762 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
@@ -44,9 +42,7 @@
 		607FACE51AFB9204008FA782 /* FXKit_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FXKit_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
-		AC81311F7ED5CB76380C7E47 /* Pods-FXKit_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FXKit_Tests.release.xcconfig"; path = "Target Support Files/Pods-FXKit_Tests/Pods-FXKit_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		AEA29A462B57EB13BB11649B /* Pods_FXKit_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FXKit_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E805CE01E1C06900D6602DBA /* Pods-FXKit_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FXKit_Tests.debug.xcconfig"; path = "Target Support Files/Pods-FXKit_Tests/Pods-FXKit_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,7 +58,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C3439ACC572B8A21341E949 /* Pods_FXKit_Tests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,8 +69,6 @@
 			children = (
 				579B6052009252FE52EF2A75 /* Pods-FXKit_Example.debug.xcconfig */,
 				0BC5CA06CF4DADE1CB4BD411 /* Pods-FXKit_Example.release.xcconfig */,
-				E805CE01E1C06900D6602DBA /* Pods-FXKit_Tests.debug.xcconfig */,
-				AC81311F7ED5CB76380C7E47 /* Pods-FXKit_Tests.release.xcconfig */,
 			);
 			name = Pods;
 			path = Pods;
@@ -155,7 +148,6 @@
 			isa = PBXGroup;
 			children = (
 				AEA29A462B57EB13BB11649B /* Pods_FXKit_Example.framework */,
-				1443AE31A381A85D8F62458D /* Pods_FXKit_Tests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -186,7 +178,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 607FACF21AFB9204008FA782 /* Build configuration list for PBXNativeTarget "FXKit_Tests" */;
 			buildPhases = (
-				56A78F7ADE1DC07328028163 /* [CP] Check Pods Manifest.lock */,
 				607FACE11AFB9204008FA782 /* Sources */,
 				607FACE21AFB9204008FA782 /* Frameworks */,
 				607FACE31AFB9204008FA782 /* Resources */,
@@ -278,28 +269,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FXKit_Example/Pods-FXKit_Example-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		56A78F7ADE1DC07328028163 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-FXKit_Tests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		ACCF3E5138BE8EA9D8C290E3 /* [CP] Check Pods Manifest.lock */ = {
@@ -505,7 +474,6 @@
 		};
 		607FACF31AFB9204008FA782 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E805CE01E1C06900D6602DBA /* Pods-FXKit_Tests.debug.xcconfig */;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -527,7 +495,6 @@
 		};
 		607FACF41AFB9204008FA782 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AC81311F7ED5CB76380C7E47 /* Pods-FXKit_Tests.release.xcconfig */;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
