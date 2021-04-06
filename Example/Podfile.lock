@@ -1,16 +1,16 @@
 PODS:
-  - FXKit (0.0.1)
+  - FXSwiftX (0.1.0)
 
 DEPENDENCIES:
-  - FXKit (from `../`)
+  - FXSwiftX (from `../`)
 
 EXTERNAL SOURCES:
-  FXKit:
+  FXSwiftX:
     :path: "../"
 
 SPEC CHECKSUMS:
-  FXKit: 9d1043a99bf21b1951ff8f00c32c8786c12e2a84
+  FXSwiftX: 8349dbd9e81af46e621447abb14a32e0309d2284
 
-PODFILE CHECKSUM: 4a7ece839d8f3994097299b22af2e26411a06b95
+PODFILE CHECKSUM: 5e3beefc06fb41a6bcbb6325dd2465f6ae487ed8
 
 COCOAPODS: 1.10.0

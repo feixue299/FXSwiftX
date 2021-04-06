@@ -1,5 +1,5 @@
 import XCTest
-import FXKit
+import FXSwiftX
 
 class Tests: XCTestCase {
     

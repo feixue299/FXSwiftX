@@ -3,5 +3,5 @@ use_frameworks!
 platform :ios, '11.0'
 
 target 'FXKit_Example' do
-  pod 'FXKit', :path => '../'
+  pod 'FXSwiftX', :path => '../'
 end

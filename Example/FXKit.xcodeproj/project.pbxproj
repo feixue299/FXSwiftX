@@ -163,7 +163,7 @@
 				607FACCC1AFB9204008FA782 /* Sources */,
 				607FACCD1AFB9204008FA782 /* Frameworks */,
 				607FACCE1AFB9204008FA782 /* Resources */,
-				192353256CEAEBF7EE3E477A /* [CP] Embed Pods Frameworks */,
+				793EE66D10D34C47BBEF7A2C /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -253,18 +253,18 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		192353256CEAEBF7EE3E477A /* [CP] Embed Pods Frameworks */ = {
+		793EE66D10D34C47BBEF7A2C /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-FXKit_Example/Pods-FXKit_Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/FXKit/FXKit.framework",
+				"${BUILT_PRODUCTS_DIR}/FXSwiftX/FXSwiftX.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FXKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FXSwiftX.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
