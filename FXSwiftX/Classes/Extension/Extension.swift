@@ -42,3 +42,33 @@ public extension Date {
         return Calendar.current.component(.year, from: self)
     }
 }
+
+extension Data {
+    var array: Array<Element> {
+        return Array(self)
+    }
+}
+
+extension Int {
+    var bcdValue: [UInt8] {
+        let str = Array("\(self)")
+        let snippetCount = (str.count / 2) + (str.count % 2 == 0 ? 0 : 1)
+        let arr = (0..<snippetCount).reversed().map({ index -> UInt8 in
+            let endIndex = Swift.min(index * 2, str.count - 1)
+            let startIndex = Swift.max(endIndex - 1, 0)
+            let string = String(str[startIndex...endIndex])
+            let int = Int(string)!
+            let uint8: UInt8 = UInt8(int / 10 * 16 + int % 10)
+            return uint8
+        })
+        
+        return arr.reversed()
+    }
+}
+
+extension Array where Element == UInt8 {
+    var hexString: String {
+        return self.compactMap { String(format: "%02x", $0).uppercased() }
+        .joined(separator: "")
+    }
+}
