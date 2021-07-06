@@ -4,7 +4,7 @@
 //
 //  Created by iMac on 2021/4/6.
 //
-
+#if canImport(SwiftUI) 
 import SwiftUI
 
 /// See `View.onChange(of: value, perform: action)` for more information
@@ -127,3 +127,4 @@ public struct SegmentView: UIViewRepresentable {
     }
     
 }
+#endif
