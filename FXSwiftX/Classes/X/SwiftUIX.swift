@@ -71,6 +71,7 @@ public extension View {
     }
 }
 
+@available(iOS 13.0, *)
 public struct SegmentView: UIViewRepresentable {
     public typealias UIViewType = SegmentControl
     
