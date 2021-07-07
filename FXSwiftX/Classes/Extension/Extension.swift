@@ -41,6 +41,13 @@ public extension Date {
     var year: Int {
         return Calendar.current.component(.year, from: self)
     }
+    
+    var dayOfMonth: Int? {
+        let calendar = Calendar.current
+        let range = calendar.range(of: .day, in: .month, for: self)
+        let dayOfMonth: Int? = range?.upperBound
+        return dayOfMonth.map({ $0 - 1 })
+    }
 }
 
 extension Data {
