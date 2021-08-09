@@ -50,13 +50,13 @@ public extension Date {
     }
 }
 
-extension Data {
+public extension Data {
     var array: Array<Element> {
         return Array(self)
     }
 }
 
-extension Int {
+public extension Int {
     var bcdValue: [UInt8] {
         let str = Array("\(self)")
         let snippetCount = (str.count / 2) + (str.count % 2 == 0 ? 0 : 1)
@@ -73,9 +73,20 @@ extension Int {
     }
 }
 
-extension Array where Element == UInt8 {
+public extension Array where Element == UInt8 {
     var hexString: String {
         return self.compactMap { String(format: "%02x", $0).uppercased() }
         .joined(separator: "")
+    }
+}
+
+public extension Optional {
+    func `let`(_ closure: (Wrapped) -> Void) {
+        switch self {
+        case .some(let value):
+            closure(value)
+        case .none:
+            break
+        }
     }
 }
