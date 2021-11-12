@@ -17,4 +17,7 @@ public struct StringConvert: Codable {
             value = try container.decode(String.self)
         }
     }
+    public init(value: String) {
+        self.value = value
+    }
 }
