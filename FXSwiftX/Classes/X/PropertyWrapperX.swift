@@ -8,7 +8,7 @@
 import Foundation
 
 @propertyWrapper
-public struct UserDefault<T> {
+public struct UserDefault<T: Codable> {
     
     let key: String
     let defaultValue: T
@@ -20,10 +20,10 @@ public struct UserDefault<T> {
     
     public var wrappedValue: T {
         get {
-            return UserDefaults.standard.object(forKey: key) as? T ?? defaultValue
+            return UserDefaults.standard.object(T.self, with: key) ?? defaultValue
         }
         set {
-            UserDefaults.standard.setValue(newValue, forKey: key)
+            UserDefaults.standard.set(object: newValue, forKey: key)
         }
     }
     
