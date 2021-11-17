@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct StringConvert: Codable {
+public struct StringConvert: Codable, Hashable {
     public let value: String
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
