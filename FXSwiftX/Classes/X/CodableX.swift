@@ -9,6 +9,11 @@ import Foundation
 
 public struct StringConvert: Codable, Hashable {
     public let value: String
+    
+    public init(value: String) {
+        self.value = value
+    }
+    
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         if let value = try? container.decode(Int.self) {
@@ -17,7 +22,10 @@ public struct StringConvert: Codable, Hashable {
             value = try container.decode(String.self)
         }
     }
-    public init(value: String) {
-        self.value = value
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(value)
     }
+    
 }
