@@ -17,13 +17,16 @@ public struct UserDefaultCache<T: Codable> {
         case day(Int)
     }
     
-    public let key: String
+    public var key: String {
+        return _key()
+    }
+    private let _key: () -> String
     public let defaultValue: T
     public let expiredDate: ExpiredDate
     private var dateKey: String { return "\(key)_date" }
     
-    public init(_ key: String, defaultValue: T, expiredDate: ExpiredDate) {
-        self.key = key
+    public init(_ key: @autoclosure @escaping () -> String, defaultValue: T, expiredDate: ExpiredDate) {
+        self._key = key
         self.defaultValue = defaultValue
         self.expiredDate = expiredDate
     }
