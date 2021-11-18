@@ -17,9 +17,9 @@ public struct UserDefaultCache<T: Codable> {
         case day(Int)
     }
     
-    private let key: String
-    private let defaultValue: T
-    private let expiredDate: ExpiredDate
+    public let key: String
+    public let defaultValue: T
+    public let expiredDate: ExpiredDate
     private var dateKey: String { return "\(key)_date" }
     
     public init(_ key: String, defaultValue: T, expiredDate: ExpiredDate) {
