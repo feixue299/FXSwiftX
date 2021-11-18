@@ -69,7 +69,7 @@ public struct UserDefaultCache<T: Codable> {
         return isExpired
     }
     
-    private var lastUpdateDate: Date? {
+    public private(set) var lastUpdateDate: Date? {
         set {
             UserDefaults.standard.setValue(Date(), forKey: dateKey)
         }
