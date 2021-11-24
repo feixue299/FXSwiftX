@@ -34,7 +34,7 @@ public struct UserDefaultCache<T: Codable> {
     public var wrappedValue: T {
         get {
             let value = UserDefaults.standard.object(T.self, with: key) ?? defaultValue
-            if let lastUpdateDate = lastUpdateDate {
+            if lastUpdateDate != nil {
                 if isExpired {
                     expired()
                     return defaultValue
