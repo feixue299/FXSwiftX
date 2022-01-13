@@ -26,9 +26,7 @@ public struct UserDefault<T: Codable> {
     public var wrappedValue: T {
         get {
             var value: T = defaultValue
-            if let objectValue = UserDefaults.standard.object(T.self, with: key) {
-                value = objectValue
-            } else if let objectValue = UserDefaults.standard.object(Wrapper<T>.self, with: key)?.wrapped {
+            if let objectValue = UserDefaults.standard.object(Wrapper<T>.self, with: key)?.wrapped {
                 value = objectValue
             }
             
