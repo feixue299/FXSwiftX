@@ -15,11 +15,14 @@ public struct UserDefault<T: Codable> {
     }
 
     
-    let key: String
-    let defaultValue: T
+    public var key: String {
+        return _key()
+    }
+    private let _key: () -> String
+    public let defaultValue: T
     
-    public init(_ key: String, defaultValue: T) {
-        self.key = key
+    public init(_ key: @autoclosure @escaping () -> String, defaultValue: T) {
+        self._key = key
         self.defaultValue = defaultValue
     }
     
