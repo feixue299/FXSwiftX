@@ -26,4 +26,10 @@ public extension UIViewController {
         
         present(activityVC, animated: true, completion: nil)
     }
+    
+    class func navigationController() -> UINavigationController {
+        let vc = Self.init()
+        let nav = UINavigationController(rootViewController: vc)
+        return nav
+    }
 }
