@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 @propertyWrapper
 public struct UserDefault<T: Codable> {
 
@@ -20,6 +21,7 @@ public struct UserDefault<T: Codable> {
     }
     private let _key: () -> String
     public let defaultValue: T
+    private var _wrappedValue: T?
     
     public init(_ key: @autoclosure @escaping () -> String, defaultValue: T) {
         self._key = key
@@ -27,15 +29,20 @@ public struct UserDefault<T: Codable> {
     }
     
     public var wrappedValue: T {
-        get {
-            var value: T = defaultValue
-            if let objectValue = UserDefaults.standard.object(Wrapper<T>.self, with: key)?.wrapped {
-                value = objectValue
+        mutating get {
+            if let _wrappedValue = _wrappedValue {
+                return _wrappedValue
+            } else {
+                var value: T = defaultValue
+                if let objectValue = UserDefaults.standard.object(Wrapper<T>.self, with: key)?.wrapped {
+                    value = objectValue
+                }
+                _wrappedValue = value
+                return value
             }
-            
-            return value
         }
         set {
+            _wrappedValue = newValue
             UserDefaults.standard.set(object: Wrapper(wrapped: newValue), forKey: key)
         }
     }
