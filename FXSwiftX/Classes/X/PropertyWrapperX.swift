@@ -48,3 +48,29 @@ public struct UserDefault<T: Codable> {
     }
     
 }
+
+@propertyWrapper
+public struct AssociatedObject<T: AnyObject> {
+    private var key: String = "AssociatedObject.key"
+    
+    public let defaultValue: T
+    public init(defaultValue: T) {
+        self.defaultValue = defaultValue
+    }
+    
+    public var wrappedValue: T {
+        set {
+            objc_setAssociatedObject(self, &key, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        mutating get {
+            let model: T
+            if let aModel = objc_getAssociatedObject(self, &key) as? T {
+                model = aModel
+            } else {
+                model = defaultValue
+                self.wrappedValue = model
+            }
+            return model
+        }
+    }
+}
