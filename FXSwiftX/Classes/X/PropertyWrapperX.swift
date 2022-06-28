@@ -20,26 +20,29 @@ public struct UserDefault<T: Codable> {
         return _key()
     }
     private let _key: () -> String
+    private var _storeKey: String
     public let defaultValue: T
     private var _wrappedValue: T?
     
     public init(_ key: @autoclosure @escaping () -> String, defaultValue: T) {
         self._key = key
+        self._storeKey = key()
         self.defaultValue = defaultValue
     }
     
     public var wrappedValue: T {
         mutating get {
-            if let _wrappedValue = _wrappedValue {
+            if _storeKey != key {
+                _storeKey = key
+            } else if let _wrappedValue = _wrappedValue {
                 return _wrappedValue
-            } else {
-                var value: T = defaultValue
-                if let objectValue = UserDefaults.standard.object(Wrapper<T>.self, with: key)?.wrapped {
-                    value = objectValue
-                }
-                _wrappedValue = value
-                return value
             }
+            var value: T = defaultValue
+            if let objectValue = UserDefaults.standard.object(Wrapper<T>.self, with: key)?.wrapped {
+                value = objectValue
+            }
+            _wrappedValue = value
+            return value
         }
         set {
             _wrappedValue = newValue
