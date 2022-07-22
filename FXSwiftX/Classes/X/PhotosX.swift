@@ -20,7 +20,7 @@ public class LivePhoto {
         }
     }
     /// Generates a PHLivePhoto from an image and video.  Also returns the paired image and video.
-    public class func generate(from imageURL: URL? = nil, videoURL: URL, progress: @escaping (CGFloat) -> Void, completion: @escaping (PHLivePhoto?, LivePhotoResources?) -> Void) {
+    public class func generate(from imageURL: URL? = nil, videoURL: URL, progress: ((CGFloat) -> Void)? = nil, completion: @escaping (PHLivePhoto?, LivePhotoResources?) -> Void) {
         queue.async {
             shared.generate(from: imageURL, videoURL: videoURL, progress: progress, completion: completion)
         }
@@ -78,7 +78,7 @@ public class LivePhoto {
         }
     }
     
-    private func generate(from imageURL: URL? = nil, videoURL: URL, progress: @escaping (CGFloat) -> Void, completion: @escaping (PHLivePhoto?, LivePhotoResources?) -> Void) {
+    private func generate(from imageURL: URL? = nil, videoURL: URL, progress: ((CGFloat) -> Void)?, completion: @escaping (PHLivePhoto?, LivePhotoResources?) -> Void) {
         guard let cacheDirectory = cacheDirectory else {
             DispatchQueue.main.async {
                 completion(nil, nil)
@@ -187,7 +187,7 @@ public class LivePhoto {
     var videoReader: AVAssetReader?
     var assetWriter: AVAssetWriter?
     
-    func addAssetID(_ assetIdentifier: String, toVideo videoURL: URL, saveTo destinationURL: URL, progress: @escaping (CGFloat) -> Void, completion: @escaping (URL?) -> Void) {
+    func addAssetID(_ assetIdentifier: String, toVideo videoURL: URL, saveTo destinationURL: URL, progress: ((CGFloat) -> Void)?, completion: @escaping (URL?) -> Void) {
         
         var audioWriterInput: AVAssetWriterInput?
         var audioReaderOutput: AVAssetReaderOutput?
@@ -258,7 +258,7 @@ public class LivePhoto {
                         if let sampleBuffer = videoReaderOutput.copyNextSampleBuffer()  {
                             currentFrameCount += 1
                             let percent:CGFloat = CGFloat(currentFrameCount)/CGFloat(frameCount)
-                            progress(percent)
+                            progress?(percent)
                             if !videoWriterInput.append(sampleBuffer) {
                                 print("Cannot write: \(String(describing: self.assetWriter?.error?.localizedDescription))")
                                 self.videoReader?.cancelReading()
