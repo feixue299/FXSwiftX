@@ -71,6 +71,18 @@ public extension View {
     }
 }
 
+public extension View {
+
+  func onTapGestureForced(
+    count: Int = 1,
+    perform action: @escaping () -> Void
+  ) -> some View {
+    self
+      .contentShape(Rectangle())
+      .onTapGesture(count: count, perform: action)
+  }
+}
+
 @available(iOS 13.0, *)
 public struct SegmentView: UIViewRepresentable {
     public typealias UIViewType = SegmentControl
