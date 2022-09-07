@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import SwiftUI
 
+@available(iOS 13.0, *)
 public extension View {
 
   func onTapGestureForced(
@@ -21,6 +22,7 @@ public extension View {
   }
 }
 
+@available(iOS 13.0, *)
 public struct UIViewPreview<V: UIView>: UIViewRepresentable {
 
   public let builder: () -> V
@@ -33,6 +35,7 @@ public struct UIViewPreview<V: UIView>: UIViewRepresentable {
   public func updateUIView(_ uiView: UIViewType, context: Context) {}
 }
 
+@available(iOS 13.0, *)
 public struct UIViewControllerPreview<VC: UIViewController>: UIViewControllerRepresentable {
 
   public let builder: () -> VC
