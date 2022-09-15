@@ -16,6 +16,11 @@ let package = Package(
     targets: [
         .target(
             name: "FXSwiftX",
-            path: "FXSwiftX/Classes"),
+            path: "FXSwiftX/Classes"
+        ),
+        .testTarget(
+            name: "FXSwiftXTests",
+            dependencies: ["FXSwiftX"]
+        )
     ]
 )
