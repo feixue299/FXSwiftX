@@ -22,9 +22,11 @@ public class TaskQueue {
     private let taskComplete = TaskComplete()
     private var isStartingTask: Bool = false
     private let bag = DisposeBag()
+    private var waitFinished = false
     
     public init() {
         taskComplete.finishSubject.sink { [weak self] in
+            self?.waitFinished = false
             self?._startTask()
         }.dispose(by: bag)
     }
@@ -59,7 +61,8 @@ public class TaskQueue {
     }
     
     private func _startTask() {
-        guard let firstTask = taskGroup.first, isStartingTask else { return }
+        guard let firstTask = taskGroup.first, isStartingTask, !waitFinished else { return }
+        waitFinished = true
         taskGroup.removeFirst()
         firstTask(taskComplete)
     }
@@ -73,6 +76,7 @@ public class TaskQueue {
 @available(iOS 13.0, *)
 private class TaskComplete: TaskCompletable {
     let finishSubject = PassthroughSubject<Void, Never>()
+    
     func finish() {
         finishSubject.send()
     }
