@@ -23,11 +23,15 @@ public class TaskQueue {
     private var isStartingTask: Bool = false
     private let bag = DisposeBag()
     private var waitFinished = false
+    public var taskInterval: Double = 0
     
     public init() {
         taskComplete.finishSubject.sink { [weak self] in
-            self?.waitFinished = false
-            self?._startTask()
+            guard let self = self else { return }
+            self.waitFinished = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + self.taskInterval) {
+                self._startTask()
+            }
         }.dispose(by: bag)
     }
     
