@@ -15,6 +15,11 @@ public protocol TaskCompletable {
 @available(iOS 13.0, *)
 public class TaskQueue {
     
+    public enum TaskInterval {
+        case interval(Double)
+        case randomRange(Range<Double>)
+    }
+    
     public typealias Task = (TaskCompletable) -> ()
     
     private var taskGroup: [Task] = []
@@ -23,13 +28,20 @@ public class TaskQueue {
     private var isStartingTask: Bool = false
     private let bag = DisposeBag()
     private var waitFinished = false
-    public var taskInterval: Double = 0
+    public var taskInterval: TaskInterval = .interval(0)
     
     public init() {
         taskComplete.finishSubject.sink { [weak self] in
             guard let self = self else { return }
             self.waitFinished = false
-            DispatchQueue.main.asyncAfter(deadline: .now() + self.taskInterval) {
+            let delay: Double
+            switch self.taskInterval {
+            case .interval(let value):
+                delay = value
+            case .randomRange(let range):
+                delay = range.random
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
                 self._startTask()
             }
         }.dispose(by: bag)
