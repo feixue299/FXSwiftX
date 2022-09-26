@@ -33,7 +33,6 @@ public class TaskQueue {
     public init() {
         taskComplete.finishSubject.sink { [weak self] in
             guard let self = self else { return }
-            self.waitFinished = false
             let delay: Double
             switch self.taskInterval {
             case .interval(let value):
@@ -42,6 +41,7 @@ public class TaskQueue {
                 delay = range.random
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                self.waitFinished = false
                 self._startTask()
             }
         }.dispose(by: bag)

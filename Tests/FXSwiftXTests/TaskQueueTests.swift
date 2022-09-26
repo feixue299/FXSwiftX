@@ -24,6 +24,7 @@ class TaskQueueTests: XCTestCase {
     }
 
     func testTaskQueueSync() {
+        let expectation = expectation(description: "未完成")
         var initCount = 3
         let taskQueue = TaskQueue()
         taskQueue.appendSyncTasks([
@@ -46,8 +47,10 @@ class TaskQueueTests: XCTestCase {
             {
                 print("5555")
                 initCount *= 2
+                expectation.fulfill()
             },
         ])
+        waitForExpectations(timeout: 10)
         XCTAssert(initCount == ((3 * 5 - 2) / 3 + 4) * 2)
     }
 
@@ -101,13 +104,14 @@ class TaskQueueTests: XCTestCase {
         let expectation = expectation(description: "未完成")
         var sign = 3
         let taskQueue = TaskQueue()
+        taskQueue.taskInterval = .randomRange(0.1..<3)
         taskQueue.appendAsyncTask { task in
             print("0000:\(Date().timeIntervalSince1970)")
             task.finish()
         }
         
         taskQueue.appendAsyncTask { task in
-            DispatchQueue.global().asyncAfter(deadline: .now() + 2) {
+            DispatchQueue.global().asyncAfter(deadline: .now()) {
                 print("1111:\(Date().timeIntervalSince1970)")
                 sign *= 5
                 task.finish()
@@ -119,11 +123,9 @@ class TaskQueueTests: XCTestCase {
             task.finish()
         }
         taskQueue.appendAsyncTask { task in
-            DispatchQueue.global().asyncAfter(deadline: .now() + 3) {
-                print("3333:\(Date().timeIntervalSince1970)")
-                sign /= 3
-                task.finish()
-            }
+            print("3333:\(Date().timeIntervalSince1970)")
+            sign /= 3
+            task.finish()
         }
         taskQueue.appendAsyncTask { task in
             print("4444:\(Date().timeIntervalSince1970)")
@@ -131,14 +133,14 @@ class TaskQueueTests: XCTestCase {
             task.finish()
         }
         taskQueue.appendAsyncTask { task in
-            DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
-                print("5555:\(Date().timeIntervalSince1970)")
+            DispatchQueue.global().asyncAfter(deadline: .now()) {
+                print("5555:\(Date().timeIntervalSince1970), :\(Thread.callStackSymbols)")
                 sign *= 2
                 task.finish()
                 expectation.fulfill()
             }
         }
-        waitForExpectations(timeout: 10)
+        waitForExpectations(timeout: 20)
         XCTAssert(sign == ((3 * 5 - 2) / 3 + 4) * 2)
     }
 
