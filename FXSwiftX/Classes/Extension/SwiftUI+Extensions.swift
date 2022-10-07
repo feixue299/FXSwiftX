@@ -48,3 +48,14 @@ public struct UIViewControllerPreview<VC: UIViewController>: UIViewControllerRep
   public func updateUIViewController(_ uiViewController: VC, context: Context) {}
 }
 
+
+@available(iOS 13.0, *)
+public extension Image {
+    init(uiImage: UIImage?) {
+        if let uiImage {
+            self.init(uiImage: uiImage)
+        } else {
+            self.init(uiImage: UIImage())
+        }
+    }
+}
