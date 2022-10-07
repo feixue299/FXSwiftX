@@ -143,5 +143,52 @@ class TaskQueueTests: XCTestCase {
         waitForExpectations(timeout: 20)
         XCTAssert(sign == ((3 * 5 - 2) / 3 + 4) * 2)
     }
+    
+    func testLaterSegmentTaskQueueAsync() {
+        let expectation = expectation(description: "未完成")
+        var sign = 3
+        let taskQueue = TaskQueue()
+        taskQueue.taskInterval = .randomRange(0.1..<3)
+        
+        taskQueue.appendAsyncTask { task in
+            print("0000:\(Date().timeIntervalSince1970)")
+            task.finish()
+        }
+        
+        taskQueue.appendAsyncTask(laterTask: true) { task in
+            DispatchQueue.global().asyncAfter(deadline: .now()) {
+                print("5555:\(Date().timeIntervalSince1970)")
+                sign *= 2
+                task.finish()
+                expectation.fulfill()
+            }
+        }
+        
+        taskQueue.appendAsyncTask { task in
+            DispatchQueue.global().asyncAfter(deadline: .now()) {
+                print("1111:\(Date().timeIntervalSince1970)")
+                sign *= 5
+                task.finish()
+            }
+        }
+        taskQueue.appendAsyncTask { task in
+            print("2222:\(Date().timeIntervalSince1970)")
+            sign -= 2
+            task.finish()
+        }
+        taskQueue.appendAsyncTask { task in
+            print("3333:\(Date().timeIntervalSince1970)")
+            sign /= 3
+            task.finish()
+        }
+        taskQueue.appendAsyncTask { task in
+            print("4444:\(Date().timeIntervalSince1970)")
+            sign += 4
+            task.finish()
+        }
+        waitForExpectations(timeout: 20)
+        print("sign:\(sign), ((3 * 5 - 2) / 3 + 4) * 2:\(((3 * 5 - 2) / 3 + 4) * 2)")
+        XCTAssert(sign == ((3 * 5 - 2) / 3 + 4) * 2)
+    }
 
 }

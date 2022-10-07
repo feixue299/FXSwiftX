@@ -23,6 +23,7 @@ public class TaskQueue {
     public typealias Task = (TaskCompletable) -> ()
     
     private var taskGroup: [Task] = []
+    private var laterTaskGroup: [Task] = []
     public var autoStart: Bool = true
     private let taskComplete = TaskComplete()
     private var isStartingTask: Bool = false
@@ -47,12 +48,12 @@ public class TaskQueue {
         }.dispose(by: bag)
     }
     
-    public func appendSyncTask(_ closure: @escaping () -> Void) {
-        appendSyncTasks([closure])
+    public func appendSyncTask(laterTask: Bool = false, _ closure: @escaping () -> Void) {
+        appendSyncTasks(laterTask: laterTask, [closure])
     }
     
-    public func appendSyncTasks(_ closures:  [() -> Void]) {
-        appendAsyncTasks(closures.map { closure in
+    public func appendSyncTasks(laterTask: Bool = false, _ closures:  [() -> Void]) {
+        appendAsyncTasks(laterTask: laterTask, closures.map { closure in
             { task in
                 closure()
                 task.finish()
@@ -60,12 +61,16 @@ public class TaskQueue {
         })
     }
     
-    public func appendAsyncTask(_ closure: @escaping Task) {
-        appendAsyncTasks([closure])
+    public func appendAsyncTask(laterTask: Bool = false, _ closure: @escaping Task) {
+        appendAsyncTasks(laterTask: laterTask, [closure])
     }
     
-    public func appendAsyncTasks(_ closures: [Task]) {
-        taskGroup.append(contentsOf: closures)
+    public func appendAsyncTasks(laterTask: Bool = false, _ closures: [Task]) {
+        if laterTask {
+            laterTaskGroup.append(contentsOf: closures)
+        } else {
+            taskGroup.append(contentsOf: closures)
+        }
         if autoStart {
             startTask()
         }
@@ -77,9 +82,19 @@ public class TaskQueue {
     }
     
     private func _startTask() {
-        guard let firstTask = taskGroup.first, isStartingTask, !waitFinished else { return }
+        guard isStartingTask, !waitFinished else { return }
+        let firstTask: Task?
+        if !taskGroup.isEmpty {
+            firstTask = taskGroup.first
+            taskGroup.removeFirst()
+        } else if !laterTaskGroup.isEmpty {
+            firstTask = laterTaskGroup.first
+            laterTaskGroup.removeFirst()
+        } else {
+            firstTask = nil
+        }
+        guard let firstTask else { return }
         waitFinished = true
-        taskGroup.removeFirst()
         firstTask(taskComplete)
     }
     
