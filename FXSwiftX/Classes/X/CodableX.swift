@@ -29,3 +29,9 @@ public struct StringConvert: Codable, Hashable {
     }
     
 }
+
+public struct CodableWrapper<T> {
+    let wrapped : T
+}
+
+extension CodableWrapper: Codable  where T : Codable { }
