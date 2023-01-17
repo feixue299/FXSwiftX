@@ -14,13 +14,15 @@ public protocol TaskCompletableContainer {
 }
 
 @available(iOS 13.0, *)
-public protocol TaskProtocol: TaskCompletableContainer {
+public protocol TaskProtocol: AnyObject, TaskCompletableContainer, Cancellable {
     func start()
+    func cancel()
 }
 
 @available(iOS 13.0, *)
-public protocol TaskCompletable: Cancellable {
+public protocol TaskCompletable {
     func finish()
+    func cancel(task: TaskProtocol)
 }
 
 @available(iOS 13.0, *)
@@ -64,6 +66,16 @@ public class TaskQueue {
             self.currentTask = nil
             self.waitFinished = false
             self.startTimer()
+        }.dispose(by: bag)
+        
+        taskComplete.cancelSubject.sink { [weak self] task in
+            guard let self else { return }
+            if let index = self.taskGroup.firstIndex(where: { $0 === task }) {
+                self.taskGroup.remove(at: index)
+            }
+            if let index = self.laterTaskGroup.firstIndex(where: { $0 === task }) {
+                self.laterTaskGroup.remove(at: index)
+            }
         }.dispose(by: bag)
     }
     
@@ -132,11 +144,12 @@ public class TaskQueue {
 
 @available(iOS 13.0, *)
 private class TaskComplete: TaskCompletable {
-    
+
     let finishSubject = PassthroughSubject<Void, Never>()
+    let cancelSubject = PassthroughSubject<TaskProtocol, Never>()
     
-    func cancel() {
-        finishSubject.send()
+    func cancel(task: TaskProtocol) {
+        cancelSubject.send(task)
     }
     
     func finish() {
