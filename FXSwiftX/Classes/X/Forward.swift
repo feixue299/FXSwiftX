@@ -63,6 +63,9 @@ public struct ReadForward<EnclosingType, Value> {
             let keyPath = instance[keyPath: storageKeyPath].keyPath
             return instance[keyPath: keyPath]
         }
+        set {
+            
+        }
     }
     
     @available(*, unavailable, message: "@Forward can only be applied to classes")
