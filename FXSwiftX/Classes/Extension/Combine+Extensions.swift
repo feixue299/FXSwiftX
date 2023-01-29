@@ -40,6 +40,22 @@ public extension NSObject {
     
 }
 
+public protocol DisposeBagProtocol {}
+
+public extension DisposeBagProtocol {
+    var bag: DisposeBag {
+        if let bag = objc_getAssociatedObject(self, &disposeBagKey) as? DisposeBag {
+            return bag
+        } else {
+            let bag = DisposeBag()
+            objc_setAssociatedObject(self, &disposeBagKey, bag, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return bag
+        }
+    }
+}
+
+extension NSObject: DisposeBagProtocol { }
+
 @available(iOS 13.0, *)
 public extension ObservableObject where Self: AnyObject {
     var bag: DisposeBag {
@@ -52,6 +68,7 @@ public extension ObservableObject where Self: AnyObject {
         }
     }
 }
+
 
 private var key = true
 private var bagKey = true
