@@ -97,26 +97,30 @@ public class TaskQueue {
     public func startTask() {
         isStartingTask = true
         _startTask()
+        
     }
     
     private func _startTask() {
-        cancelTimer()
-        guard isStartingTask, !waitFinished else { return }
-        let firstTask: TaskProtocol?
-        if !taskGroup.isEmpty {
-            firstTask = taskGroup.first
-            taskGroup.removeFirst()
-        } else if !laterTaskGroup.isEmpty {
-            firstTask = laterTaskGroup.first
-            laterTaskGroup.removeFirst()
-        } else {
-            firstTask = nil
+        let lock = NSLock()
+        lock.withLock {
+            cancelTimer()
+            guard isStartingTask, !waitFinished else { return }
+            let firstTask: TaskProtocol?
+            if !taskGroup.isEmpty {
+                firstTask = taskGroup.first
+                taskGroup.removeFirst()
+            } else if !laterTaskGroup.isEmpty {
+                firstTask = laterTaskGroup.first
+                laterTaskGroup.removeFirst()
+            } else {
+                firstTask = nil
+            }
+            guard var firstTask else { return }
+            currentTask = firstTask
+            firstTask.taskCompletable = taskComplete
+            waitFinished = true
+            firstTask.start()
         }
-        guard var firstTask else { return }
-        currentTask = firstTask
-        firstTask.taskCompletable = taskComplete
-        waitFinished = true
-        firstTask.start()
     }
     
     public func stopTask() {
