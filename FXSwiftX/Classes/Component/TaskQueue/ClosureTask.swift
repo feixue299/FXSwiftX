@@ -34,6 +34,7 @@ public extension TaskQueue {
     
     typealias Task = (TaskCompletable) -> ()
     
+    @discardableResult
     func appendSyncTask(laterTask: Bool = false, _ closure: @escaping () -> Void) -> Cancellable {
         appendAsyncTask(laterTask: laterTask) { task in
             closure()
@@ -41,16 +42,19 @@ public extension TaskQueue {
         }
     }
     
+    @discardableResult
     func appendSyncTasks(laterTask: Bool = false, _ closures:  [() -> Void]) -> [Cancellable] {
         closures.map { appendSyncTask(laterTask: laterTask, $0) }
     }
     
+    @discardableResult
     func appendAsyncTask(laterTask: Bool = false, _ closure: @escaping Task) -> Cancellable {
         let task = ClosureTask(closure: closure)
         appendTask(task: task, laterTask: laterTask)
         return task
     }
     
+    @discardableResult
     func appendAsyncTasks(laterTask: Bool = false, _ closures: [Task]) -> [Cancellable] {
         closures.map { appendAsyncTask(laterTask: laterTask, $0) }
     }

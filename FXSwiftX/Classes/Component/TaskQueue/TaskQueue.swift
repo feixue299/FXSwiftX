@@ -120,9 +120,11 @@ public class TaskQueue {
             }
             guard var firstTask else { return }
             currentTask = firstTask
-            firstTask.taskCompletable = taskComplete
             waitFinished = true
-            firstTask.start()
+            DispatchQueue.main.async {
+                firstTask.taskCompletable = self.taskComplete
+                firstTask.start()
+            }
         }
     }
     
@@ -133,7 +135,12 @@ public class TaskQueue {
     private func startTimer() {
         let delay = nextIsNormalTask ? taskInterval.delay : laterTaskInterval.delay
         if delay == 0 {
-            self._startTask()
+            /*
+             重新开一个线程，避免死锁
+             */
+            DispatchQueue.global().async {
+                self._startTask()
+            }
         } else {
             timer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false, block: { [weak self] _ in
                 self?._startTask()
