@@ -62,10 +62,23 @@ public extension ObservableObject where Self: AnyObject {
         if let bag = objc_getAssociatedObject(self, &disposeBagKey) as? DisposeBag {
             return bag
         } else {
+            
             let bag = DisposeBag()
             objc_setAssociatedObject(self, &disposeBagKey, bag, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return bag
         }
+    }
+}
+
+@available(iOS 13.0, *)
+extension Publishers {
+    static func makePublisher<Output, Failure>(_ closure: @escaping (PassthroughSubject<Output, Failure>) -> Cancellable) -> AnyPublisher<Output, Failure> {
+        return Deferred { () -> AnyPublisher<Output, Failure> in
+            let subject = PassthroughSubject<Output, Failure>()
+            let cancellable = closure(subject)
+            return subject.handleEvents(receiveCancel: { cancellable.cancel() })
+                .eraseToAnyPublisher()
+        }.eraseToAnyPublisher()
     }
 }
 
