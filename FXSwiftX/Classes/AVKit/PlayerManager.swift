@@ -41,6 +41,7 @@ public class PlayerManager: NSObject {
     private var looper: AVPlayerLooper?
     public var playToClosure: (() -> Void)?
     public var updateStatus: Bool = true
+    public var isPlaying: Bool { player.rate != 0 }
     
     public init(url: URL, isAutoPlay: Bool = false) {
         self.url = url

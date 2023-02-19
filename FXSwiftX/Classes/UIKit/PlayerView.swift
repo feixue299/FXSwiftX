@@ -17,11 +17,27 @@ public class PlayerView: UIView {
             playerLayer.player = playerManager?.player
         }
     }
+    private var needResumePlay = false
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
         layer.addSublayer(playerLayer)
         playerLayer.videoGravity = .resizeAspectFill
+        
+        NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification).sink { [weak self] _ in
+            guard let self else { return }
+            if self.needResumePlay {
+                self.needResumePlay = false
+                self.playerManager?.play()
+            }
+        }.dispose(by: bag)
+        NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification).sink { [weak self] _ in
+            guard let self, let playerManager = self.playerManager else { return }
+            if playerManager.isPlaying {
+                self.needResumePlay = true
+                playerManager.pause()
+            }
+        }.dispose(by: bag)
     }
     
     required init?(coder: NSCoder) {
