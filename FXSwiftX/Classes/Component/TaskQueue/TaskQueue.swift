@@ -59,8 +59,7 @@ public class TaskQueue {
     private var nextIsNormalTask: Bool {
         return !taskGroup.isEmpty
     }
-    private let appendTaskDispatch = DispatchQueue(label: "appendTaskDispatch")
-    private let taskDispatch = DispatchQueue(label: "taskDispatch")
+    private let lock = NSLock()
     
     public init() {
         taskComplete.finishSubject.sink { [weak self] in
@@ -86,15 +85,15 @@ public class TaskQueue {
     }
     
     public func appendTasks(tasks: [TaskProtocol], laterTask: Bool = false) {
-        appendTaskDispatch.sync {
+        lock.withLock {
             if laterTask {
                 laterTaskGroup.append(contentsOf: tasks)
             } else {
                 taskGroup.append(contentsOf: tasks)
             }
-            if autoStart {
-                startTask()
-            }
+        }
+        if autoStart {
+            startTask()
         }
     }
     
@@ -105,23 +104,23 @@ public class TaskQueue {
     }
     
     private func _startTask() {
-        taskDispatch.sync {
+        lock.withLock {
             cancelTimer()
             guard isStartingTask, !waitFinished else { return }
             let firstTask: TaskProtocol?
-            if !taskGroup.isEmpty {
-                firstTask = taskGroup.first
+            if let task = taskGroup.first {
                 taskGroup.removeFirst()
-            } else if !laterTaskGroup.isEmpty {
-                firstTask = laterTaskGroup.first
+                firstTask = task
+            } else if let task = laterTaskGroup.first {
                 laterTaskGroup.removeFirst()
+                firstTask = task
             } else {
                 firstTask = nil
             }
             guard var firstTask else { return }
             currentTask = firstTask
             waitFinished = true
-            DispatchQueue.main.async {
+            DispatchQueue.global().async {
                 firstTask.taskCompletable = self.taskComplete
                 firstTask.start()
             }
