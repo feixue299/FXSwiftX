@@ -92,7 +92,7 @@ public class TaskQueue {
                 taskGroup.append(contentsOf: tasks)
             }
         }
-        if autoStart {
+        if autoStart && isStartingTask == false {
             startTask()
         }
     }
