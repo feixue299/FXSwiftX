@@ -53,7 +53,7 @@ public class TaskQueue {
     private let taskComplete = TaskComplete()
     private var isStartingTask: Bool = false
     private let bag = DisposeBag()
-    private var waitFinished = false
+    public private(set) var waitFinished = false
     private var currentTask: TaskProtocol?
     private var timer: Timer?
     private var nextIsNormalTask: Bool {
@@ -92,7 +92,7 @@ public class TaskQueue {
                 taskGroup.append(contentsOf: tasks)
             }
         }
-        if autoStart && isStartingTask == false {
+        if autoStart && (isStartingTask == false || waitFinished == false) {
             startTask()
         }
     }
