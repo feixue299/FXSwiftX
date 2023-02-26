@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'FXSwiftX'
-  s.version          = '0.6.0'
+  s.version          = '0.7.0'
   s.summary          = 'tool'
   s.homepage         = 'https://github.com/feixue299/FXSwiftX'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
