@@ -66,7 +66,7 @@ public extension View {
     ///   - action: A closure to run when the value changes.
     ///   - newValue: The new value that failed the comparison check.
     /// - Returns: A modified version of this view
-    func onChange<Value: Equatable>(of value: Value, perform action: @escaping (_ newValue: Value)->Void) -> ChangeObserver<Self, Value> {
+    func onChange<Value: Equatable>(_ value: Value, perform action: @escaping (_ newValue: Value)->Void) -> ChangeObserver<Self, Value> {
         ChangeObserver(base: self, value: value, action: action)
     }
 }
