@@ -11,41 +11,52 @@ import SwiftUI
 
 @available(iOS 13.0, *)
 public extension View {
-
-  func onTapGestureForced(
-    count: Int = 1,
-    perform action: @escaping () -> Void
-  ) -> some View {
-    self
-      .contentShape(Rectangle())
-      .onTapGesture(count: count, perform: action)
-  }
+    
+    func onTapGestureForced(
+        count: Int = 1,
+        perform action: @escaping () -> Void
+    ) -> some View {
+        self
+            .contentShape(Rectangle())
+            .onTapGesture(count: count, perform: action)
+    }
 }
 
 @available(iOS 13.0, *)
 public struct UIViewPreview<V: UIView>: UIViewRepresentable {
-
-  public let builder: () -> V
-
-  public init(builder: @escaping () -> V) {
-    self.builder = builder
-  }
-
-  public func makeUIView(context: Context) -> some UIView { builder() }
-  public func updateUIView(_ uiView: UIViewType, context: Context) {}
+    
+    public let size: CGSize?
+    public let builder: () -> V
+    
+    public init(size: CGSize? = nil, builder: @escaping () -> V) {
+        self.size = size
+        self.builder = builder
+    }
+    
+    public func makeUIView(context: Context) -> some UIView {
+        let view = builder()
+        if let size {
+            NSLayoutConstraint.activate([
+                view.widthAnchor.constraint(equalToConstant: size.width),
+                view.heightAnchor.constraint(equalToConstant: size.height),
+            ])
+        }
+        return view
+    }
+    public func updateUIView(_ uiView: UIViewType, context: Context) {}
 }
 
 @available(iOS 13.0, *)
 public struct UIViewControllerPreview<VC: UIViewController>: UIViewControllerRepresentable {
-
-  public let builder: () -> VC
-
-  public init(builder: @escaping () -> VC) {
-    self.builder = builder
-  }
-
-  public func makeUIViewController(context: Context) -> VC { builder() }
-  public func updateUIViewController(_ uiViewController: VC, context: Context) {}
+    
+    public let builder: () -> VC
+    
+    public init(builder: @escaping () -> VC) {
+        self.builder = builder
+    }
+    
+    public func makeUIViewController(context: Context) -> VC { builder() }
+    public func updateUIViewController(_ uiViewController: VC, context: Context) {}
 }
 
 
@@ -59,3 +70,21 @@ public extension Image {
         }
     }
 }
+
+@available(iOS 13.0, *)
+public extension View {
+    func asyncTask(_ action: @Sendable @escaping () async -> Void) -> some View {
+        var task: Task<Void, Error>?
+        
+        return self
+            .onAppear {
+                task = Task {
+                    await action()
+                }
+            }
+            .onDisappear {
+                task?.cancel()
+            }
+    }
+}
+
