@@ -10,13 +10,7 @@ import SwiftUI
 @available(iOS 13.0.0, *)
 public struct StateView<Data, Success, Loading, Failure>: View where Success: View, Loading: View, Failure: View {
     
-    public struct RetryAction {
-      let action: () -> Void
-
-      public func callAsFunction() {
-        action()
-      }
-    }
+    public typealias RetryAction = () -> Void
     
     enum Phase {
       case loading
@@ -27,19 +21,17 @@ public struct StateView<Data, Success, Loading, Failure>: View where Success: Vi
     let fetchData: () async throws -> Data
     let success: (Data) -> Success
     let loading: () -> Loading
-    let failure: (Error, RetryAction) -> Failure
+    let failure: (Error, @escaping RetryAction) -> Failure
     
     @State var phase = Phase.loading
     
-    var retryAction: RetryAction {
-      RetryAction { phase = .loading }
-    }
+    var retryAction: RetryAction { { phase = .loading } }
     
     public init(
       fetchData: @escaping () async throws -> Data,
       @ViewBuilder success: @escaping (Data) -> Success,
       @ViewBuilder loading: @escaping () -> Loading,
-      @ViewBuilder failure: @escaping (Error, RetryAction) -> Failure
+      @ViewBuilder failure: @escaping (Error, @escaping RetryAction) -> Failure
     ) {
       self.fetchData = fetchData
       self.success = success
