@@ -28,6 +28,11 @@ public protocol TaskCompletable {
 @available(iOS 13.0, *)
 public class TaskQueue {
     
+    public enum PriorityType {
+        case user
+        case background
+    }
+    
     public enum TaskInterval {
         case interval(Double)
         case randomRange(Range<Double>)
@@ -44,20 +49,29 @@ public class TaskQueue {
         }
     }
     
+    class TaskContainer {
+        var task: TaskProtocol
+        let priority: PriorityType
+        
+        init(task: TaskProtocol, priority: PriorityType) {
+            self.task = task
+            self.priority = priority
+        }
+    }
+    
     public var autoStart: Bool = true
     public var taskInterval: TaskInterval = .interval(0)
     public var laterTaskInterval: TaskInterval = .interval(0)
     
-    private var taskGroup: [TaskProtocol] = []
-    private var laterTaskGroup: [TaskProtocol] = []
+    private var taskGroup: [TaskContainer] = []
     private let taskComplete = TaskComplete()
     private var isStartingTask: Bool = false
     private let bag = DisposeBag()
     public private(set) var waitFinished = false
-    private var currentTask: TaskProtocol?
+    private var currentTask: TaskContainer?
     private var timer: Timer?
     private var nextIsNormalTask: Bool {
-        return !taskGroup.isEmpty
+        return taskGroup.contains(where: { $0.priority == .user })
     }
     private let lock = NSLock()
     
@@ -74,23 +88,16 @@ public class TaskQueue {
             if let index = self.taskGroup.firstIndex(where: { $0 === task }) {
                 self.taskGroup.remove(at: index)
             }
-            if let index = self.laterTaskGroup.firstIndex(where: { $0 === task }) {
-                self.laterTaskGroup.remove(at: index)
-            }
         }.dispose(by: bag)
     }
     
-    public func appendTask(task: TaskProtocol, laterTask: Bool = false) {
-        appendTasks(tasks: [task], laterTask: laterTask)
+    public func appendTask(task: TaskProtocol, priority: PriorityType = .user) {
+        appendTasks(tasks: [task], priority: priority)
     }
     
-    public func appendTasks(tasks: [TaskProtocol], laterTask: Bool = false) {
+    public func appendTasks(tasks: [TaskProtocol], priority: PriorityType = .user) {
         lock.withLock {
-            if laterTask {
-                laterTaskGroup.append(contentsOf: tasks)
-            } else {
-                taskGroup.append(contentsOf: tasks)
-            }
+            taskGroup.append(contentsOf: tasks.map({ TaskContainer(task: $0, priority: priority) }))
         }
         if autoStart && (isStartingTask == false || waitFinished == false) {
             startTask()
@@ -107,12 +114,12 @@ public class TaskQueue {
         lock.withLock {
             cancelTimer()
             guard isStartingTask, !waitFinished else { return }
-            let firstTask: TaskProtocol?
-            if let task = taskGroup.first {
-                taskGroup.removeFirst()
+            let firstTask: TaskContainer?
+            if let index = taskGroup.firstIndex(where: { $0.priority == .user }) {
+                let task = taskGroup.remove(at: index)
                 firstTask = task
-            } else if let task = laterTaskGroup.first {
-                laterTaskGroup.removeFirst()
+            } else if let index = taskGroup.firstIndex(where: { $0.priority == .background }) {
+                let task = taskGroup.remove(at: index)
                 firstTask = task
             } else {
                 firstTask = nil
@@ -121,8 +128,8 @@ public class TaskQueue {
             currentTask = firstTask
             waitFinished = true
             DispatchQueue.global().async {
-                firstTask.taskCompletable = self.taskComplete
-                firstTask.start()
+                firstTask.task.taskCompletable = self.taskComplete
+                firstTask.task.start()
             }
         }
     }

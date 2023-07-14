@@ -35,27 +35,27 @@ public extension TaskQueue {
     typealias Task = (TaskCompletable) -> ()
     
     @discardableResult
-    func appendSyncTask(laterTask: Bool = false, _ closure: @escaping () -> Void) -> Cancellable {
-        appendAsyncTask(laterTask: laterTask) { task in
+    func appendSyncTask(priority: PriorityType = .user, _ closure: @escaping () -> Void) -> Cancellable {
+        appendAsyncTask(priority: priority) { task in
             closure()
             task.finish()
         }
     }
     
     @discardableResult
-    func appendSyncTasks(laterTask: Bool = false, _ closures:  [() -> Void]) -> [Cancellable] {
-        closures.map { appendSyncTask(laterTask: laterTask, $0) }
+    func appendSyncTasks(priority: PriorityType = .user, _ closures:  [() -> Void]) -> [Cancellable] {
+        closures.map { appendSyncTask(priority: priority, $0) }
     }
     
     @discardableResult
-    func appendAsyncTask(laterTask: Bool = false, _ closure: @escaping Task) -> Cancellable {
+    func appendAsyncTask(priority: PriorityType = .user, _ closure: @escaping Task) -> Cancellable {
         let task = ClosureTask(closure: closure)
-        appendTask(task: task, laterTask: laterTask)
+        appendTask(task: task, priority: priority)
         return task
     }
     
     @discardableResult
-    func appendAsyncTasks(laterTask: Bool = false, _ closures: [Task]) -> [Cancellable] {
-        closures.map { appendAsyncTask(laterTask: laterTask, $0) }
+    func appendAsyncTasks(priority: PriorityType = .user, _ closures: [Task]) -> [Cancellable] {
+        closures.map { appendAsyncTask(priority: priority, $0) }
     }
 }
