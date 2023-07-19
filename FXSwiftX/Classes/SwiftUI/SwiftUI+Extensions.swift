@@ -88,3 +88,33 @@ public extension View {
     }
 }
 
+@available(iOS 13.0, *)
+public struct FXViewPreview: UIViewRepresentable {
+  public typealias UIViewType = UIView
+  
+  public let builder: () -> UIView
+
+  public init(builder: @escaping () -> UIView) {
+    self.builder = builder
+  }
+  
+  public func makeUIView(context: Context) -> UIView {
+    let view = UIView()
+    
+    let customView = builder()
+    
+    customView.translatesAutoresizingMaskIntoConstraints = false
+    view.addSubview(customView)
+    
+    NSLayoutConstraint.activate([
+      customView.widthAnchor.constraint(equalTo: view.widthAnchor),
+      customView.heightAnchor.constraint(equalTo: view.heightAnchor)
+    ])
+    
+    return view
+  }
+  
+  public func updateUIView(_ uiView: UIView, context: Context) { }
+  
+}
+
