@@ -9,42 +9,7 @@ import Foundation
 import UIKit
 import SwiftUI
 
-@available(iOS 13.0, *)
-public extension View {
-    
-    func onTapGestureForced(
-        count: Int = 1,
-        perform action: @escaping () -> Void
-    ) -> some View {
-        self
-            .contentShape(Rectangle())
-            .onTapGesture(count: count, perform: action)
-    }
-}
 
-@available(iOS 13.0, *)
-public struct UIViewPreview<V: UIView>: UIViewRepresentable {
-    
-    public let size: CGSize?
-    public let builder: () -> V
-    
-    public init(size: CGSize? = nil, builder: @escaping () -> V) {
-        self.size = size
-        self.builder = builder
-    }
-    
-    public func makeUIView(context: Context) -> some UIView {
-        let view = builder()
-        if let size {
-            NSLayoutConstraint.activate([
-                view.widthAnchor.constraint(equalToConstant: size.width),
-                view.heightAnchor.constraint(equalToConstant: size.height),
-            ])
-        }
-        return view
-    }
-    public func updateUIView(_ uiView: UIViewType, context: Context) {}
-}
 
 @available(iOS 13.0, *)
 public struct UIViewControllerPreview<VC: UIViewController>: UIViewControllerRepresentable {
@@ -71,50 +36,40 @@ public extension Image {
     }
 }
 
+
+
 @available(iOS 13.0, *)
-public extension View {
-    func asyncTask(_ action: @Sendable @escaping () async -> Void) -> some View {
-        var task: Task<Void, Error>?
-        
-        return self
-            .onAppear {
-                task = Task {
-                    await action()
-                }
-            }
-            .onDisappear {
-                task?.cancel()
-            }
+public struct FXViewPreview<ContentView: UIView>: UIViewRepresentable {
+    public typealias UIViewType = UIView
+    
+    @Binding
+    public var contentView: ContentView?
+    
+    public let builder: () -> ContentView
+    
+    public init(contentView: Binding<ContentView?> = .constant(nil), builder: @escaping () -> ContentView) {
+        self._contentView = contentView
+        self.builder = builder
     }
-}
-
-@available(iOS 13.0, *)
-public struct FXViewPreview: UIViewRepresentable {
-  public typealias UIViewType = UIView
-  
-  public let builder: () -> UIView
-
-  public init(builder: @escaping () -> UIView) {
-    self.builder = builder
-  }
-  
-  public func makeUIView(context: Context) -> UIView {
-    let view = UIView()
     
-    let customView = builder()
+    public func makeUIView(context: Context) -> UIView {
+        let view = UIView()
+        
+        let customView = builder()
+        contentView = customView
+        
+        customView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(customView)
+        
+        NSLayoutConstraint.activate([
+            customView.widthAnchor.constraint(equalTo: view.widthAnchor),
+            customView.heightAnchor.constraint(equalTo: view.heightAnchor)
+        ])
+        
+        return view
+    }
     
-    customView.translatesAutoresizingMaskIntoConstraints = false
-    view.addSubview(customView)
+    public func updateUIView(_ uiView: UIView, context: Context) { }
     
-    NSLayoutConstraint.activate([
-      customView.widthAnchor.constraint(equalTo: view.widthAnchor),
-      customView.heightAnchor.constraint(equalTo: view.heightAnchor)
-    ])
-    
-    return view
-  }
-  
-  public func updateUIView(_ uiView: UIView, context: Context) { }
-  
 }
 
