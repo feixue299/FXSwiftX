@@ -76,7 +76,7 @@ public class TaskQueue {
     private let lock = NSLock()
     
     public init() {
-        taskComplete.finishSubject.sink { [weak self] in
+        taskComplete.finishSubject.receive(on: DispatchQueue.main).sink { [weak self] in
             guard let self = self else { return }
             self.currentTask = nil
             self.waitFinished = false

@@ -12,15 +12,33 @@ import Combine
 class ClosureTask: TaskProtocol {
     var taskCompletable: TaskCompletable?
     
-    let closure: TaskQueue.Task
+    enum TaskType {
+        case closure(TaskQueue.Task)
+        case asyncClosure(TaskQueue.AsyncTask)
+    }
+    
+    let taskType: TaskType
     
     init(closure: @escaping TaskQueue.Task) {
-        self.closure = closure
+        self.taskType = .closure(closure)
+    }
+    
+    init(asyncClosure: @escaping TaskQueue.AsyncTask) {
+        self.taskType = .asyncClosure(asyncClosure)
     }
     
     func start() {
         guard let taskCompletable else { return }
-        closure(taskCompletable)
+        switch taskType {
+        case .closure(let task):
+            task(taskCompletable)
+        case .asyncClosure(let asyncTask):
+            Task {
+                defer { taskCompletable.finish() }
+                
+                try await asyncTask()
+            }
+        }
     }
     
     func cancel() {
@@ -33,9 +51,10 @@ class ClosureTask: TaskProtocol {
 public extension TaskQueue {
     
     typealias Task = (TaskCompletable) -> ()
+    typealias AsyncTask = () async throws -> Void
     
     @discardableResult
-    func appendSyncTask(priority: PriorityType = .user, _ closure: @escaping () -> Void) -> Cancellable {
+    func appendSyncTask(priority: PriorityType = .user, _ closure: @escaping () -> Void)  -> Cancellable {
         appendAsyncTask(priority: priority) { task in
             closure()
             task.finish()
@@ -49,13 +68,21 @@ public extension TaskQueue {
     
     @discardableResult
     func appendAsyncTask(priority: PriorityType = .user, _ closure: @escaping Task) -> Cancellable {
-        let task = ClosureTask(closure: closure)
-        appendTask(task: task, priority: priority)
-        return task
+        appendAsyncTasks(priority: priority, [closure]).first!
     }
     
     @discardableResult
     func appendAsyncTasks(priority: PriorityType = .user, _ closures: [Task]) -> [Cancellable] {
-        closures.map { appendAsyncTask(priority: priority, $0) }
+        let tasks = closures.map { ClosureTask(closure: $0) }
+        appendTasks(tasks: tasks)
+        return tasks
     }
+    
+    @discardableResult
+    func appendConcurrencyAsyncTask(priority: PriorityType = .user, _ closure: @escaping AsyncTask) -> Cancellable {
+        let task = ClosureTask(asyncClosure: closure)
+        appendTask(task: task, priority: priority)
+        return task
+    }
+    
 }
