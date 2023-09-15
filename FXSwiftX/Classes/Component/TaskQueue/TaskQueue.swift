@@ -68,7 +68,6 @@ public class TaskQueue {
     private var isStartingTask: Bool = false
     private let bag = DisposeBag()
     public private(set) var waitFinished = false
-    private var currentTask: TaskContainer?
     private var timer: Timer?
     private var nextIsNormalTask: Bool {
         return taskGroup.contains(where: { $0.priority == .user })
@@ -78,8 +77,6 @@ public class TaskQueue {
     public init() {
         taskComplete.finishSubject.receive(on: DispatchQueue.main).sink { [weak self] in
             guard let self = self else { return }
-            self.currentTask = nil
-            self.waitFinished = false
             self.startTimer()
         }.dispose(by: bag)
         
@@ -110,6 +107,10 @@ public class TaskQueue {
         
     }
     
+    private func reset() {
+        self.waitFinished = false
+    }
+    
     private func _startTask() {
         lock.withLock {
             cancelTimer()
@@ -125,7 +126,6 @@ public class TaskQueue {
                 firstTask = nil
             }
             guard var firstTask else { return }
-            currentTask = firstTask
             waitFinished = true
             DispatchQueue.global().async {
                 firstTask.task.taskCompletable = self.taskComplete
@@ -149,6 +149,7 @@ public class TaskQueue {
             }
         } else {
             timer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false, block: { [weak self] _ in
+                self?.reset()
                 self?._startTask()
             })
         }
