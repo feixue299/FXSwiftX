@@ -34,6 +34,50 @@ public extension View {
         self.frame(width: sideLength, height: sideLength)
     }
     
+    func horizontal(alignment: HorizontalAlignment) -> some View {
+      Group {
+        if alignment == .leading {
+          HStack(spacing: 0) {
+            self
+            Spacer()
+          }
+        } else if alignment == .trailing {
+          HStack(spacing: 0) {
+            Spacer()
+            self
+          }
+        } else {
+          HStack(spacing: 0) {
+            Spacer()
+            self
+            Spacer()
+          }
+        }
+      }
+    }
+    
+    func vertical(alignment: VerticalAlignment) -> some View {
+      Group {
+        if alignment == .top {
+          VStack(spacing: 0) {
+            self
+            Spacer()
+          }
+        } else if alignment == .bottom {
+          VStack(spacing: 0) {
+            Spacer()
+            self
+          }
+        } else {
+          VStack(spacing: 0) {
+            Spacer()
+            self
+            Spacer()
+          }
+        }
+      }
+    }
+    
 }
 
 @available(iOS 13.0, *)
