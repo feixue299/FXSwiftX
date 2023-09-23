@@ -18,6 +18,8 @@ public struct StringConvert: Codable, Hashable {
         let container = try decoder.singleValueContainer()
         if let value = try? container.decode(Int.self) {
             self.value = "\(value)"
+        } else if let value = try? container.decode(Bool.self) {
+            self.value = "\(value)"
         } else {
             value = try container.decode(String.self)
         }
