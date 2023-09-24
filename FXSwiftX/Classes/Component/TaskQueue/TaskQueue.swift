@@ -145,6 +145,7 @@ public class TaskQueue {
              重新开一个线程，避免死锁
              */
             DispatchQueue.global().async {
+                self.reset()
                 self._startTask()
             }
         } else {
