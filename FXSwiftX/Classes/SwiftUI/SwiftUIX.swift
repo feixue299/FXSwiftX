@@ -8,6 +8,7 @@
 import SwiftUI
 
 /// See `View.onChange(of: value, perform: action)` for more information
+@available(macOS 10.15, *)
 @available(iOS 13.0, *)
 public struct ChangeObserver<Base: View, Value: Equatable>: View {
     let base: Base
@@ -33,6 +34,7 @@ public struct ChangeObserver<Base: View, Value: Equatable>: View {
     }
 }
 
+@available(macOS 10.15, *)
 @available(iOS 13.0, *)
 public extension View {
     /// Adds a modifier for this view that fires an action when a specific value changes.
@@ -70,7 +72,9 @@ public extension View {
         ChangeObserver(base: self, value: value, action: action)
     }
 }
+#endif
 
+#if os(iOS)
 @available(iOS 13.0, *)
 public struct SegmentView: UIViewRepresentable {
     public typealias UIViewType = SegmentControl

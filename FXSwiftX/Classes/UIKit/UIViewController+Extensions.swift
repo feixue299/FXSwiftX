@@ -5,6 +5,7 @@
 //  Created by hard on 2021/10/29.
 //
 
+#if os(iOS)
 import Foundation
 import UIKit
 
@@ -33,3 +34,4 @@ public extension UIViewController {
         return nav
     }
 }
+#endif

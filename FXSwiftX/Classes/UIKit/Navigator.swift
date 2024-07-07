@@ -2,6 +2,7 @@
 //  Navigator.swift
 //  
 
+#if os(iOS)
 import SwiftUI
 import UIKit
 
@@ -135,3 +136,4 @@ extension UITabBarController {
         selectedViewController?.topMostVC ?? self
     }
 }
+#endif

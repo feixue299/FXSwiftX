@@ -2,6 +2,7 @@
 //  UINavigationController+Replace.swift
 //
 
+#if os(iOS)
 import UIKit
 
 public extension UINavigationController {
@@ -14,3 +15,5 @@ public extension UINavigationController {
     setViewControllers(viewControllers, animated: animated)
   }
 }
+
+#endif

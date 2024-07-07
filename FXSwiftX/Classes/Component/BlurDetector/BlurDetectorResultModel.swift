@@ -7,6 +7,7 @@
 
 import Foundation
 
+#if os(iOS)
 // MARK: BlurDetectorResultModel
 
 @available(iOS 13.0, *)
@@ -45,3 +46,4 @@ class BlurDetectorResultModel: ObservableObject, BlurDetectorResultsDelegate {
   }
 }
 
+#endif

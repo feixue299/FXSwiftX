@@ -9,6 +9,7 @@ import Foundation
 import AVKit
 import Combine
 
+@available(macOS 10.15, *)
 @available(iOS 13.0, *)
 public class PlayerManager: NSObject {
     public enum PlayStatus {

@@ -5,6 +5,7 @@
 //  Created by aria on 2023/2/16.
 //
 
+#if os(iOS)
 import UIKit
 
 public extension UIView {
@@ -13,3 +14,4 @@ public extension UIView {
       layer.masksToBounds = true
     }
 }
+#endif

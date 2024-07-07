@@ -8,23 +8,27 @@
 import Foundation
 import Combine
 
+@available(macOS 10.15, *)
 @available(iOS 13.0, *)
 public protocol TaskCompletableContainer {
     var taskCompletable: TaskCompletable? { set get }
 }
 
+@available(macOS 10.15, *)
 @available(iOS 13.0, *)
 public protocol TaskProtocol: AnyObject, TaskCompletableContainer, Cancellable {
     func start()
     func cancel()
 }
 
+@available(macOS 10.15, *)
 @available(iOS 13.0, *)
 public protocol TaskCompletable {
     func finish()
     func cancel(task: TaskProtocol)
 }
 
+@available(macOS 10.15, *)
 @available(iOS 13.0, *)
 public class TaskQueue {
     
@@ -164,6 +168,7 @@ public class TaskQueue {
     
 }
 
+@available(macOS 10.15, *)
 @available(iOS 13.0, *)
 private class TaskComplete: TaskCompletable {
 

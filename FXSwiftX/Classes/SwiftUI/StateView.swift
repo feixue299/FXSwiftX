@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(macOS 10.15, *)
 @available(iOS 13.0.0, *)
 public struct StateView<Data, Success, Loading, Failure>: View where Success: View, Loading: View, Failure: View {
     
@@ -58,29 +59,5 @@ public struct StateView<Data, Success, Loading, Failure>: View where Success: Vi
           failure(error, retryAction)
         }
       }
-    }
-}
-
-@available(iOS 13.0.0, *)
-struct StateView_Previews: PreviewProvider {
-    static var previews: some View {
-        StateView {
-            do {
-                try await Task.sleep(nanoseconds: 3_000_000_000)
-            } catch {}
-            return "Success"
-        } success: { (text: String) in
-            Text(text)
-                .lineLimit(1)
-        } loading: {
-            Text("Loading")
-        } failure: { _, retry in
-            Button {
-                retry()
-            } label: {
-                Text("Retry")
-            }
-        }
-
     }
 }

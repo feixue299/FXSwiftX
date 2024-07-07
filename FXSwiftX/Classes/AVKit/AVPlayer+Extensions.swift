@@ -9,6 +9,7 @@ import Foundation
 import AVFoundation
 import Combine
 
+@available(macOS 10.15, *)
 @available(iOS 13.0, *)
 public extension AVPlayer {
     func periodicTimePublisher(for interval: CMTime, queue: DispatchQueue?) -> some Publisher<CMTime, Never> {

@@ -5,7 +5,7 @@
 //  Created by aria on 2022/10/12.
 //
 
-import UIKit
+import Foundation
 
 public extension String {
     var jsonObject: Any? {

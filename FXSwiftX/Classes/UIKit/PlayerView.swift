@@ -5,6 +5,7 @@
 //  Created by aria on 2022/11/2.
 //
 
+#if os(iOS)
 import UIKit
 import AVKit
 
@@ -50,3 +51,4 @@ public class PlayerView: UIView {
     }
     
 }
+#endif

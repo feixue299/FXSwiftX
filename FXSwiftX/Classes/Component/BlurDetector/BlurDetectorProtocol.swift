@@ -10,6 +10,7 @@ import CoreGraphics
 import AVFoundation
 import Accelerate
 
+#if os(iOS)
 // MARK: BlurDetectionResult
 
 public struct BlurDetectionResult {
@@ -52,6 +53,7 @@ public protocol BlurDetectorProtocol {
   func processImage(sourceBuffer: vImage_Buffer,
                     orientation: UInt32?) -> BlurDetectionResult?
 }
+
 
 public extension BlurDetectorProtocol {
   func getPixelInfo(orientation: UInt32?, pixelBuffer: CVPixelBuffer) -> PixelInfo {
@@ -124,3 +126,4 @@ public extension BlurDetectorProtocol {
     }
   }
 }
+#endif

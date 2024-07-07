@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(macOS 10.15, *)
 @available(iOS 13.0, *)
 public extension View {
     
@@ -80,6 +81,7 @@ public extension View {
     
 }
 
+@available(macOS 10.15, *)
 @available(iOS 13.0, *)
 public extension View {
     func asyncTask(_ action: @Sendable @escaping () async -> Void) -> some View {

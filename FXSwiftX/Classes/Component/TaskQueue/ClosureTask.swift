@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 
+@available(macOS 10.15, *)
 @available(iOS 13.0, *)
 class ClosureTask: TaskProtocol {
     var taskCompletable: TaskCompletable?
@@ -47,6 +48,7 @@ class ClosureTask: TaskProtocol {
     
 }
 
+@available(macOS 10.15, *)
 @available(iOS 13.0, *)
 public extension TaskQueue {
     

@@ -6,8 +6,8 @@
 //
 import AVFoundation
 import Accelerate
-import UIKit
 
+#if os(iOS)
 // MARK: BlurDetector
 @available(iOS 13.0, *)
 public class BlurDetector: NSObject, BlurDetectorProtocol {
@@ -249,3 +249,4 @@ extension AVCaptureVideoOrientation {
     }
   }
 }
+#endif

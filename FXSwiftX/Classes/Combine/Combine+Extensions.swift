@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 
+@available(macOS 10.15, *)
 @available(iOS 13.0, *)
 public extension AnyCancellable {
     func dispose(by bag: DisposeBag) {
@@ -15,6 +16,7 @@ public extension AnyCancellable {
     }
 }
 
+@available(macOS 10.15, *)
 public extension NSObject {
     
     @available(iOS 13.0, *)
@@ -56,6 +58,7 @@ public extension DisposeBagProtocol {
 
 extension NSObject: DisposeBagProtocol { }
 
+@available(macOS 10.15, *)
 @available(iOS 13.0, *)
 public extension ObservableObject where Self: AnyObject {
     var bag: DisposeBag {
@@ -70,6 +73,7 @@ public extension ObservableObject where Self: AnyObject {
     }
 }
 
+@available(macOS 10.15, *)
 @available(iOS 13.0, *)
 extension Publishers {
     static func makePublisher<Output, Failure>(_ closure: @escaping (PassthroughSubject<Output, Failure>) -> Cancellable) -> AnyPublisher<Output, Failure> {

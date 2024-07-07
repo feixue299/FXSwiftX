@@ -5,10 +5,10 @@
 //  Created by aria on 2022/9/1.
 //
 
+#if os(iOS)
 import Foundation
 import UIKit
 import SwiftUI
-
 
 
 @available(iOS 13.0, *)
@@ -73,3 +73,4 @@ public struct FXViewPreview<ContentView: UIView>: UIViewRepresentable {
     
 }
 
+#endif

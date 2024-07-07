@@ -7,15 +7,15 @@
 //
 
 import Foundation
-import UIKit
 import Accelerate
 
+#if os(iOS)
 @available(iOS 13.0, *)
 public class MonoImage {
   /*
    The Core Graphics image representation of the source asset.
    */
-  public let image: UIImage
+  public let image: FXImage
   /*
    The format of the source asset.
    */
@@ -28,9 +28,9 @@ public class MonoImage {
    The 1-channel, 8-bit vImage buffer used as the operation destination.
    */
   public private(set) var destinationBuffer: vImage_Buffer?
-  public private(set) var monoImage: UIImage?
+  public private(set) var monoImage: FXImage?
   
-  public init(image: UIImage) {
+  public init(image: FXImage) {
     if let cgImage = image.cgImage,
        let format = vImage_CGImageFormat(cgImage: cgImage),
        let sourceBuffer = Self.getBuffer(cgImage: cgImage, format: format) {
@@ -138,3 +138,4 @@ public class MonoImage {
   
 }
 
+#endif

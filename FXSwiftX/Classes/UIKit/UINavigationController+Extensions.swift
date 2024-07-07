@@ -5,6 +5,7 @@
 //  Created by aria on 2022/10/14.
 //
 
+#if os(iOS)
 import SwiftUI
 
 @available(iOS 13.0, *)
@@ -15,3 +16,4 @@ public extension UINavigationController {
         return nav
     }
 }
+#endif
