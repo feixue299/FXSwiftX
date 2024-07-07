@@ -6,10 +6,10 @@
 //  Copyright © 2022 Apple. All rights reserved.
 //
 
+#if os(iOS)
 import Foundation
 import Accelerate
 
-#if os(iOS)
 @available(iOS 13.0, *)
 public class MonoImage {
   /*
@@ -131,7 +131,7 @@ public class MonoImage {
     
     // Display the grayscale result.
     if let result = result {
-      monoImage = UIImage(cgImage: result)
+      monoImage = FXImage(cgImage: result)
     }
     
   }

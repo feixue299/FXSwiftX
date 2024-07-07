@@ -4,10 +4,11 @@
 //
 //  Created by aria on 2022/9/2.
 //
+#if os(iOS)
 import AVFoundation
 import Accelerate
+import UIKit
 
-#if os(iOS)
 // MARK: BlurDetector
 @available(iOS 13.0, *)
 public class BlurDetector: NSObject, BlurDetectorProtocol {
@@ -208,7 +209,7 @@ extension BlurDetector {
 
 
 // Extensions to simplify conversion between orientation enums.
-extension UIImage.Orientation {
+extension FXImage.Orientation {
   init(_ cgOrientation: CGImagePropertyOrientation) {
     switch cgOrientation {
     case .up:

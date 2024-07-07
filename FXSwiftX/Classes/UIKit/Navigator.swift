@@ -75,14 +75,10 @@ public extension Navigator {
         if let window = UIApplication.shared.delegate?.window?.flatMap({ $0 }) {
             keyWindow = window
         } else {
-            if #available(iOS 13.0, *) {
-                if let window = ((UIApplication.shared.connectedScenes.first as? UIWindowScene)?.delegate as? UIWindowSceneDelegate)?.window {
-                    keyWindow = window
-                } else {
-                    keyWindow = UIApplication.shared.keyWindow
-                }
+            if let window = ((UIApplication.shared.connectedScenes.first as? UIWindowScene)?.delegate as? UIWindowSceneDelegate)?.window {
+                keyWindow = window
             } else {
-                keyWindow = UIApplication.shared.windows.first
+                keyWindow = UIApplication.shared.keyWindow
             }
         }
         

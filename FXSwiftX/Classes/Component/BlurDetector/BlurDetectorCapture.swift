@@ -5,11 +5,12 @@
 //  Created by aria on 2022/9/2.
 //
 
+#if os(iOS)
 import Foundation
 import AVFoundation
 import Accelerate
+import UIKit
 
-#if os(iOS)
 // MARK: BlurDetectorResultsDelegate protcol
 
 protocol BlurDetectorResultsDelegate: AnyObject {

@@ -129,7 +129,7 @@ public class TaskQueue {
             } else {
                 firstTask = nil
             }
-            guard var firstTask else { return }
+            guard let firstTask else { return }
             waitFinished = true
             DispatchQueue.global().async {
                 firstTask.task.taskCompletable = self.taskComplete
