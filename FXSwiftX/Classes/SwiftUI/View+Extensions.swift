@@ -79,6 +79,10 @@ public extension View {
       }
     }
     
+    func onAppearOnce(perform action: @escaping (_ isFirst: Bool) -> Void) -> some View {
+        self.modifier(AppearOnce(perform: action))
+    }
+    
 }
 
 @available(macOS 10.15, *)

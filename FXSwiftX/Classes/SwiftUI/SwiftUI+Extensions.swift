@@ -42,21 +42,18 @@ public extension Image {
 public struct FXViewPreview<ContentView: UIView>: UIViewRepresentable {
     public typealias UIViewType = UIView
     
-    @Binding
-    public var contentView: ContentView?
-    
     public let builder: () -> ContentView
+    public let updater: ((ContentView) -> Void)?
     
-    public init(contentView: Binding<ContentView?> = .constant(nil), builder: @escaping () -> ContentView) {
-        self._contentView = contentView
+    public init(builder: @escaping () -> ContentView, updater: ((ContentView) -> Void)? = nil) {
         self.builder = builder
+        self.updater = updater
     }
     
     public func makeUIView(context: Context) -> UIView {
         let view = UIView()
         
         let customView = builder()
-        contentView = customView
         
         customView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(customView)
@@ -69,7 +66,11 @@ public struct FXViewPreview<ContentView: UIView>: UIViewRepresentable {
         return view
     }
     
-    public func updateUIView(_ uiView: UIView, context: Context) { }
+    public func updateUIView(_ uiView: UIView, context: Context) { 
+        if let view = uiView.subviews.first as? ContentView {
+          updater?(view)
+        }
+    }
     
 }
 
