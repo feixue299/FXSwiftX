@@ -7,10 +7,11 @@
 
 import Foundation
 
-public func withTry(_ closure: () throws -> Void) {
+public func withTry(file: String = #file, line: Int = #line, _ closure: () throws -> Void) {
     do {
         try closure()
     } catch {
-        print("\(Bundle.main.bundleIdentifier ?? "") error: \(error)")
+        print("file: \(file), line: \(line), error: \(error)")
     }
 }
+
