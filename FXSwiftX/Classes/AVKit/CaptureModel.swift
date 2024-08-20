@@ -96,14 +96,14 @@ open class CaptureModel: NSObject {
     open func setupCamera(_ cameraType: CameraType = .wideAngle, format: ((AVCaptureDevice) throws -> ())? = nil) throws {
         let device = try Self.getDeviceFromCamera(cameraType)
         try setupDevice(device)
-        let session = try getSession(device: device)
+        let session = try getSession(device: device, format: format)
         
         self.cameraType = cameraType
         self.device = device
         self.session = session
     }
     
-    open func changeCamera(_ cameraType: CameraType) throws {
+    open func changeCamera(_ cameraType: CameraType, format: ((AVCaptureDevice) throws -> ())? = nil) throws {
         guard cameraType != self.cameraType else { return }
         print("changeCamera:\(cameraType)")
         let device = try Self.getDeviceFromCamera(cameraType)
@@ -112,7 +112,11 @@ open class CaptureModel: NSObject {
         if let session {
             session.beginConfiguration()
             
-            try selectFormat(device: device)
+            if let format {
+                try format(device)
+            } else {
+                try selectFormat(device: device)
+            }
             
             let deviceInput = try AVCaptureDeviceInput(device: device)
             
@@ -141,14 +145,6 @@ open class CaptureModel: NSObject {
             device.focusMode = .continuousAutoFocus
         }
         
-        // 在 activeFormat 不支持 hdr 的情况下
-        // 直接设置 isVideoHDREnabled 会产生崩溃
-        if device.activeFormat.isVideoHDRSupported {
-            // 目前我们的重建流程对于 HDR 支持得不好（Photo Mode/Featureless Object/3DGS 都是）
-            // 并且 iOS 默认会尽可能开启 HDR，所以这里显式调用 API 禁用它。
-            device.automaticallyAdjustsVideoHDREnabled = false
-            device.isVideoHDREnabled = false
-        }
         device.unlockForConfiguration()
         
     }

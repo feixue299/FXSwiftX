@@ -10,7 +10,7 @@ import Foundation
 public extension Array where Element == UInt8 {
     var hexString: String {
         return self.compactMap { String(format: "%02x", $0).uppercased() }
-        .joined(separator: "")
+            .joined(separator: "")
     }
 }
 
