@@ -35,6 +35,8 @@ open class CaptureModel: NSObject {
     public private(set) var session: AVCaptureSession?
     @Published
     public private(set) var cameraType: CameraType?
+    @Published
+    public private(set) var cameraPosition: AVCaptureDevice.Position = .back
     
     public private(set) var photoOutput = AVCapturePhotoOutput()
     public private(set) var videoOutput = AVCaptureMovieFileOutput()
@@ -93,20 +95,21 @@ open class CaptureModel: NSObject {
         await CaptureModel.requestAccess()
     }
     
-    open func setupCamera(_ cameraType: CameraType = .wideAngle, format: ((AVCaptureDevice) throws -> ())? = nil) throws {
-        let device = try Self.getDeviceFromCamera(cameraType)
+    open func setupCamera(_ cameraType: CameraType = .wideAngle, position: AVCaptureDevice.Position = .back, format: ((AVCaptureDevice) throws -> ())? = nil) throws {
+        let device = try Self.getDeviceFromCamera(cameraType, position: position)
         try setupDevice(device)
         let session = try getSession(device: device, format: format)
         
         self.cameraType = cameraType
+        self.cameraPosition = position
         self.device = device
         self.session = session
     }
     
-    open func changeCamera(_ cameraType: CameraType, format: ((AVCaptureDevice) throws -> ())? = nil) throws {
-        guard cameraType != self.cameraType else { return }
+    open func changeCamera(_ cameraType: CameraType, position: AVCaptureDevice.Position = .back, format: ((AVCaptureDevice) throws -> ())? = nil) throws {
+        guard (cameraType != self.cameraType || position != self.cameraPosition) else { return }
         print("changeCamera:\(cameraType)")
-        let device = try Self.getDeviceFromCamera(cameraType)
+        let device = try Self.getDeviceFromCamera(cameraType, position: position)
         try setupDevice(device)
         
         if let session {
@@ -135,6 +138,7 @@ open class CaptureModel: NSObject {
         }
         
         self.cameraType = cameraType
+        self.cameraPosition = position
         self.device = device
     }
     
@@ -201,14 +205,14 @@ open class CaptureModel: NSObject {
         return session
     }
     
-    open class func getDeviceFromCamera(_ cameraType: CameraType) throws -> AVCaptureDevice {
+    open class func getDeviceFromCamera(_ cameraType: CameraType, position: AVCaptureDevice.Position = .back) throws -> AVCaptureDevice {
         var device: AVCaptureDevice?
         switch cameraType {
         case .microLens:
             let devices = AVCaptureDevice.DiscoverySession(
                 deviceTypes: [.builtInUltraWideCamera],
                 mediaType: .video,
-                position: .back
+                position: position
             ).devices
             device = devices.first
         case .wideAngle:
@@ -220,15 +224,16 @@ open class CaptureModel: NSObject {
             let devices = AVCaptureDevice.DiscoverySession(
                 deviceTypes: [.builtInTelephotoCamera],
                 mediaType: .video,
-                position: .back
+                position: position
             ).devices
             device = devices.first
         case .tripleCamera:
             let devices = AVCaptureDevice.DiscoverySession(
-                deviceTypes: [.builtInTripleCamera],
+                deviceTypes: [.builtInTripleCamera, .builtInDualWideCamera, .builtInDualCamera, .builtInWideAngleCamera],
                 mediaType: .video,
-                position: .back
+                position: position
             ).devices
+            print("devices:\(devices)")
             device = devices.first
         }
         guard let device else { throw ErrorType.noCamera }
