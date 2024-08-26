@@ -9,7 +9,7 @@ import Foundation
 
 public struct LoopIterator<Base: Collection>: IteratorProtocol {
 
-    private let collection: Base
+    public let collection: Base
     private var index: Base.Index
 
     public init(collection: Base) {
