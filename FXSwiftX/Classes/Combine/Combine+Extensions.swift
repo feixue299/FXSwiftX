@@ -11,9 +11,20 @@ import Combine
 @available(macOS 10.15, *)
 @available(iOS 13.0, *)
 public extension AnyCancellable {
+    
     func dispose(by bag: DisposeBag) {
         bag.insert(self)
     }
+    
+    func singleStore(in dic: inout [String: AnyCancellable], key: String) {
+        dic[key] = self
+    }
+    
+    func singleStore(in dic: inout [String: AnyCancellable], function: String = #function, line: Int = #line) {
+        let key = "\(function) \(line)"
+        dic[key] = self
+    }
+    
 }
 
 @available(macOS 10.15, *)
@@ -37,6 +48,16 @@ public extension NSObject {
             let bagRef = Reference<[Any]>([])
             objc_setAssociatedObject(self, &bagKey, bagRef, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return bagRef
+        }
+    }
+    
+    var dicBagRef: Reference<[String: AnyCancellable]> {
+        if let dicBagRef = objc_getAssociatedObject(self, &dicBagKey) as? Reference<[String: AnyCancellable]> {
+            return dicBagRef
+        } else {
+            let dicBagRef = Reference<[String: AnyCancellable]>([:])
+            objc_setAssociatedObject(self, &dicBagKey, dicBagRef, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return dicBagRef
         }
     }
     
@@ -90,3 +111,4 @@ extension Publishers {
 private var key = true
 private var bagKey = true
 private var disposeBagKey = true
+private var dicBagKey = true

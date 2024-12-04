@@ -40,7 +40,14 @@ open class CaptureModel: NSObject {
     
     public private(set) var photoOutput = AVCapturePhotoOutput()
     public private(set) var videoOutput = AVCaptureMovieFileOutput()
+    public private(set) var videoDataOutput = AVCaptureVideoDataOutput()
     private var isRunning = true
+    private let videoQueue = DispatchQueue(label: "videoQueue")
+    public weak var sampleBufferDelegate: AVCaptureVideoDataOutputSampleBufferDelegate? {
+        didSet {
+            print("didset sampleBufferDelegate:\(sampleBufferDelegate)")
+        }
+    }
     
     public override init() {
         super.init()
@@ -190,6 +197,16 @@ open class CaptureModel: NSObject {
             throw NSError(domain: Bundle.main.bundleIdentifier ?? "", code: -2)
         }
         
+        if session.canAddOutput(videoDataOutput) {
+            session.addOutput(videoDataOutput)
+            if let sampleBufferDelegate {
+                videoDataOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA)]
+                videoDataOutput.setSampleBufferDelegate(sampleBufferDelegate, queue: videoQueue)
+            }
+        } else {
+            throw NSError(domain: Bundle.main.bundleIdentifier ?? "", code: -2)
+        }
+        
         if let format {
             try format(device)
         } else {
@@ -233,7 +250,7 @@ open class CaptureModel: NSObject {
                 mediaType: .video,
                 position: position
             ).devices
-            print("devices:\(devices)")
+//            print("devices:\(devices)")
             device = devices.first
         }
         guard let device else { throw ErrorType.noCamera }
