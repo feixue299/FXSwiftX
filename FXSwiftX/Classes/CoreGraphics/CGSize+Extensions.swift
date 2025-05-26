@@ -26,4 +26,18 @@ public extension CGSize {
             return CGSize(width: width, height: newHeight)
         }
     }
+    
+    init(sideLength: Int) {
+        self.init(width: sideLength, height: sideLength)
+    }
+    
+    init(sideLength: Double) {
+        self.init(width: sideLength, height: sideLength)
+    }
+    
+    init(sideLength: CGFloat) {
+        self.init(width: sideLength, height: sideLength)
+    }
+    
+    var aspectRatio: CGFloat { width / height }
 }
