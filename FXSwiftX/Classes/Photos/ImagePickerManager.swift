@@ -54,7 +54,7 @@ open class ImagePickerManager: NSObject, ObservableObject {
         albums = AlbumModel.fetchUserAlbums()
         for album in albums {
             let result = AlbumModel.fetchAssets(with: album)
-            albumAsset[album] = result.objects(at: IndexSet(integersIn: 0..<result.count))
+            albumAsset[album] = result.objects(at: IndexSet(integersIn: 0..<result.count)).reversed()
         }
         favoriteAsset = AlbumModel.fetchAllAsset(subtype: .smartAlbumFavorites).reversed()
         
