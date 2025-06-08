@@ -14,9 +14,9 @@ public struct StateView<Data, Success, Loading, Failure>: View where Success: Vi
     public typealias RetryAction = () -> Void
     
     enum Phase {
-      case loading
-      case success(Data)
-      case failure(Error)
+        case loading
+        case success(Data)
+        case failure(Error)
     }
     
     let fetchData: () async throws -> Data
@@ -29,35 +29,47 @@ public struct StateView<Data, Success, Loading, Failure>: View where Success: Vi
     var retryAction: RetryAction { { phase = .loading } }
     
     public init(
-      fetchData: @escaping () async throws -> Data,
-      @ViewBuilder success: @escaping (Data) -> Success,
-      @ViewBuilder loading: @escaping () -> Loading,
-      @ViewBuilder failure: @escaping (Error, @escaping RetryAction) -> Failure
+        fetchData: @escaping () async throws -> Data,
+        @ViewBuilder success: @escaping (Data) -> Success,
+        @ViewBuilder loading: @escaping () -> Loading,
+        @ViewBuilder failure: @escaping (Error, @escaping RetryAction) -> Failure
     ) {
-      self.fetchData = fetchData
-      self.success = success
-      self.loading = loading
-      self.failure = failure
+        self.fetchData = fetchData
+        self.success = success
+        self.loading = loading
+        self.failure = failure
+    }
+    
+    public init(
+        fetchData: @escaping () async throws -> Data,
+        @ViewBuilder success: @escaping (Data) -> Success
+    ) where Loading == Text, Failure == Text {
+        self.init(
+            fetchData: fetchData,
+            success: success,
+            loading: { Text("") },
+            failure: { _, _ in Text("") }
+        )
     }
     
     public var body: some View {
-      Group {
-        switch phase {
-        case .loading:
-          loading()
-            .asyncTask {
-              do {
-                let data = try await fetchData()
-                phase = .success(data)
-              } catch {
-                phase = .failure(error)
-              }
+        Group {
+            switch phase {
+            case .loading:
+                loading()
+                    .asyncTask {
+                        do {
+                            let data = try await fetchData()
+                            phase = .success(data)
+                        } catch {
+                            phase = .failure(error)
+                        }
+                    }
+            case let .success(data):
+                success(data)
+            case let .failure(error):
+                failure(error, retryAction)
             }
-        case let .success(data):
-          success(data)
-        case let .failure(error):
-          failure(error, retryAction)
         }
-      }
     }
 }
