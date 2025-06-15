@@ -81,10 +81,17 @@ open class AlbumModel {
         return assets
     }
     
-    public static func requestImage(for asset: PHAsset, targetSize: CGSize = CGSize(width: 100, height: 100)) async -> UIImage? {
+    public static func requestImage(
+        for asset: PHAsset,
+        targetSize: CGSize = CGSize(width: 100, height: 100),
+        optionsConfig: (PHImageRequestOptions) -> Void = { _ in }
+    ) async -> UIImage? {
         // 设置请求选项
         let options = PHImageRequestOptions()
+        options.deliveryMode = .highQualityFormat
+        options.isNetworkAccessAllowed = true
         //    options.deliveryMode = .fastFormat
+        optionsConfig(options)
         
         // 使用 PHImageManager 请求封面图
         return await withCheckedContinuation { c in
